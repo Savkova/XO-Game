@@ -1,5 +1,6 @@
 package com.savkova.xogame.controllers;
 
+import com.savkova.xogame.GameView;
 import com.savkova.xogame.InputAgent;
 import com.savkova.xogame.Main;
 import com.savkova.xogame.entities.Board;
@@ -8,6 +9,8 @@ import com.savkova.xogame.entities.Player;
 import com.savkova.xogame.exceptions.AlreadyOccupiedException;
 import com.savkova.xogame.exceptions.NoExistPositionException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class GameController
@@ -48,6 +51,8 @@ public class GameController
         // human move
         if ((currentFigure != null) && (currentFigure.equals(huFigure)))
         {
+            System.out.println("\n");
+            GameView.showBoard(board);
             try
             {
                 position = inputAgent.askMovePosition();
@@ -66,17 +71,25 @@ public class GameController
             {
                 System.out.println("This place is already occupied, enter other position:");
             }
-        // computer move
+            // computer move
         } else if ((currentFigure != null) && (currentFigure.equals(aiFigure)))
         {
-            position = aiRandomMove(board, aiFigure);
+            position = 0;
+            try
+            {
+                position = aiRandomMove(board, aiFigure);
+                putFigure(board, position, aiFigure);
+                System.out.println("\n\nOpponent move: " + (position + 1));
+            } catch (AlreadyOccupiedException e)
+            {
+            }
 
             if (isWinner(board, position))
             {
                 isWin = true;
                 showWinnerName(true, aiFigure);
             }
-        // board full
+            // board full
         } else if (currentFigure == null)
         {
             showWinnerName(false, null);
@@ -134,6 +147,96 @@ public class GameController
         return position;
     }
 
+    private int computerMove(final Board board, final Figure figure)
+    {
+        Random random = new Random(System.currentTimeMillis());
+
+        int center = 4;
+        int[] corners = {0, 2, 6, 8};
+
+        Figure[] figures = board.getFigures();
+        List<Integer> emptyIndexes = findEmptyIndexes(board);
+        int index;
+
+        if (figures[4] == null)
+            return center;
+
+        if (emptyIndexes.size() == 7)
+        {
+            index = random.nextInt(4);
+            return corners[index];
+        }
+
+        for (int i = 0; i < emptyIndexes.size(); i++)
+        {
+            //check rows
+            int row = emptyIndexes.get(i) - emptyIndexes.get(i) % 3;
+            if (((figures[row] == figures[row + 1]) && (figures[row] != null))
+                    || ((figures[row] == figures[row + 2]) && (figures[row] != null))
+                    || ((figures[row + 1] == figures[row + 2]) && (figures[row + 1] != null)))
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    if (figures[j] == null)
+                        return j;
+                }
+            }
+            //check columns
+            int column = emptyIndexes.get(i) % 3;
+            if (((figures[column] == figures[column + 3]) && (figures[column] != null))
+                    || ((figures[column] == figures[column + 6]) && (figures[column] != null))
+                    || ((figures[column + 3] == figures[column + 6]) && (figures[column + 3] != null)))
+            {
+                for (int j = 0; j < 3; j += 3)
+                {
+                    if (figures[j] == null)
+                        return j;
+                }
+            }
+
+            if (emptyIndexes.get(i) % 4 == 0)
+            {
+                //check left diagonal
+                if ((((figures[0] == figures[4]) && (figures[0] != null))
+                        || ((figures[0] == figures[8]) && (figures[0] != null))
+                        || ((figures[4] == figures[8]) && (figures[4] != null)))
+                        // check right diagonal
+                        || ((figures[2] == figures[4]) && (figures[2] != null))
+                        || ((figures[2] == figures[6]) && (figures[2] != null))
+                        || ((figures[4] == figures[6]) && (figures[4] != null)))
+                {
+                    for (int j = 0; j < 3; j += 4)
+                    {
+                        if (figures[j] == null)
+                            return j;
+                    }
+                }
+            }
+        }
+
+
+        while (true)
+
+        {
+            index = random.nextInt(emptyIndexes.size());
+            if (board.getFigure(index) == null)
+                break;
+        }
+        return emptyIndexes.get(index);
+    }
+
+    private List<Integer> findEmptyIndexes(Board board)
+    {
+        Figure[] figures = board.getFigures();
+        ArrayList<Integer> emptyIndexes = new ArrayList<>();
+        for (int i = 0; i < figures.length; i++)
+        {
+            if (figures[i] == null)
+                emptyIndexes.add(i);
+        }
+        return emptyIndexes;
+    }
+
     private boolean isWinner(Board board, int lastMove)
     {
         Figure[] figures = board.getFigures();
@@ -162,10 +265,11 @@ public class GameController
     {
         if (isWin)
         {
-           Player winner = players[0].getFigure().equals(figure) ? players[0] : players[1];
+            GameView.showBoard(board);
+            Player winner = players[0].getFigure().equals(figure) ? players[0] : players[1];
             System.out.println("\n" + winner.getName() + " win!");
-        }
-        else {
+        } else
+        {
             System.out.println("\nNo winner.");
         }
     }
