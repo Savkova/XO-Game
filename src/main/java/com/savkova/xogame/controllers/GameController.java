@@ -214,9 +214,7 @@ public class GameController
             }
         }
 
-
         while (true)
-
         {
             index = random.nextInt(emptyIndexes.size());
             if (board.getFigure(index) == null)
