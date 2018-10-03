@@ -37,17 +37,15 @@ public class GameController
     public boolean move()
     {
         if (isWin)
-        {
             return false;
-        }
 
         Figure huFigure = players[0].getFigure();
         Figure aiFigure = players[1].getFigure();
         Figure currentFigure = getCurrentMoveFigure(board);
         InputAgent inputAgent = Main.getInputAgent();
 
-        Player winner;
-        int position = -1;
+        int position;
+        // human move
         if ((currentFigure != null) && (currentFigure.equals(huFigure)))
         {
             try
@@ -58,8 +56,7 @@ public class GameController
                 if (isWinner(board, position))
                 {
                     isWin = true;
-                    winner = players[0].getFigure().equals(huFigure) ? players[0] : players[1];
-                    System.out.println("\n" + winner.getName() + " win!");
+                    showWinnerName(true, huFigure);
                 }
 
             } catch (NoExistPositionException e)
@@ -69,6 +66,7 @@ public class GameController
             {
                 System.out.println("This place is already occupied, enter other position:");
             }
+        // computer move
         } else if ((currentFigure != null) && (currentFigure.equals(aiFigure)))
         {
             position = aiRandomMove(board, aiFigure);
@@ -76,18 +74,15 @@ public class GameController
             if (isWinner(board, position))
             {
                 isWin = true;
-                winner = players[0].getFigure().equals(aiFigure) ? players[0] : players[1];
-                System.out.println("\n" + winner.getName() + " win!");
+                showWinnerName(true, aiFigure);
             }
+        // board full
         } else if (currentFigure == null)
         {
-            isWin = false;
-            System.out.println("\nNo winner.");
-            return false;
-        } else
-        {
+            showWinnerName(false, null);
             return false;
         }
+
         return true;
     }
 
@@ -97,6 +92,25 @@ public class GameController
             throw new AlreadyOccupiedException();
 
         board.setFigure(position, figure);
+    }
+
+    private Figure getCurrentMoveFigure(Board board)
+    {
+        int count = 0;
+        Figure[] figures = board.getFigures();
+        for (int i = 0; i < figures.length; i++)
+        {
+            if (board.getFigure(i) != null)
+                count++;
+        }
+
+        if (count == figures.length)
+            return null;
+
+        if (count % 2 == 0)
+            return Figure.X;
+
+        return Figure.O;
     }
 
     private int aiRandomMove(final Board board, final Figure figure)
@@ -144,24 +158,15 @@ public class GameController
         return ((figures[2] == figures[4]) && (figures[2] == figures[6]));
     }
 
-    private Figure getCurrentMoveFigure(Board board)
+    private void showWinnerName(boolean isWin, Figure figure)
     {
-        int count = 0;
-        Figure[] figures = board.getFigures();
-        for (int i = 0; i < figures.length; i++)
+        if (isWin)
         {
-            if (board.getFigure(i) != null)
-                count++;
+           Player winner = players[0].getFigure().equals(figure) ? players[0] : players[1];
+            System.out.println("\n" + winner.getName() + " win!");
         }
-
-        if (count == figures.length)
-            return null;
-
-        if (count % 2 == 0)
-            return Figure.X;
-
-        return Figure.O;
+        else {
+            System.out.println("\nNo winner.");
+        }
     }
-
-
 }
