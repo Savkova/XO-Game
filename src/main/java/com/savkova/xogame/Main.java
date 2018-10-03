@@ -36,13 +36,12 @@ public class Main
 
     private static void startGame(GameView gameView)
     {
-        gameView.showBoard();
         System.out.println("\n\nLet's start!\n");
         gameView.showPlayers();
 
         while (gameView.getGameController().move())
         {
-            gameView.showBoard();
+            //moving
         }
 
         continueGame();

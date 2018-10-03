@@ -38,7 +38,8 @@ public class InputAgent
             else
                 System.out.println("Try again, please:");
         }
-        return (line.equalsIgnoreCase(com.savkova.xogame.entities.Figure.X.name())) ? com.savkova.xogame.entities.Figure.X : com.savkova.xogame.entities.Figure.O;
+        return (line.equalsIgnoreCase(com.savkova.xogame.entities.Figure.X.name()))
+                ? com.savkova.xogame.entities.Figure.X : com.savkova.xogame.entities.Figure.O;
     }
 
     public int askMovePosition() throws com.savkova.xogame.exceptions.NoExistPositionException
@@ -65,7 +66,7 @@ public class InputAgent
             }
 
         }
-        return i - 1;
+        return (i - 1);
     }
 
     public boolean askStartNewGame()

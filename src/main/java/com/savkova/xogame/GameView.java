@@ -29,9 +29,8 @@ public class GameView
                 computer.getName(), computer.getFigure());
     }
 
-    public void showBoard()
+    public static void showBoard(Board board)
     {
-        Board board = gameController.getBoard();
         Figure[] figures = board.getFigures();
 
         int horizontalLength = 11;
@@ -52,7 +51,7 @@ public class GameView
         }
     }
 
-    private void createHorizontalLine(final char separator, final int length)
+    private static void createHorizontalLine(final char separator, final int length)
     {
         StringBuilder result = new StringBuilder();
         result.append("\n");
