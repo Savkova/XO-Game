@@ -1,6 +1,9 @@
-package com.savkova.xogame.entities;
+package com.savkova.xogame;
 
 import com.savkova.xogame.controllers.GameController;
+import com.savkova.xogame.entities.Board;
+import com.savkova.xogame.entities.Figure;
+import com.savkova.xogame.entities.Player;
 
 public class GameView
 {
