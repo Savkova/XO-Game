@@ -1,45 +1,34 @@
-package com.savkova.xogame;
+package com.savkova.xogame.entities;
 
-import com.savkova.xogame.entities.*;
+import com.savkova.xogame.controllers.GameController;
 
 public class GameView
 {
-    private final Game game;
+    private final GameController gameController;
 
-    public GameView(InputAgent console)
+    public GameView(final GameController gameController)
     {
-        String playerName = console.askPlayerName();
-        Figure playerFigure = console.askFigureType();
-        final Player player = new Player(playerName, playerFigure);
-
-        String opponentName = "AI";
-        Figure opponentFigure = playerFigure.name().equalsIgnoreCase(Figure.X.name()) ? Figure.O : Figure.X;
-        final Player computer = new Player(opponentName, opponentFigure);
-
-        final Board board = new Board();
-        final Player[] players = {player, computer};
-        final Difficulty level = console.askDifficulty();
-        game = new Game(board, players, level);
+        this.gameController = gameController;
     }
 
-    public Game getGame()
+    public GameController getGameController()
     {
-        return game;
+        return gameController;
     }
 
     public void showPlayers()
     {
-        Player player = game.getPlayers()[0];
-        Player computer = game.getPlayers()[1];
+        Player player = gameController.getPlayers()[0];
+        Player computer = gameController.getPlayers()[1];
 
-        System.out.printf("%s ('%s') vs. %s ('%s')\n\n",
+        System.out.printf("%s ('%s') vs. %s ('%s')",
                 player.getName(), player.getFigure(),
                 computer.getName(), computer.getFigure());
     }
 
     public void showBoard()
     {
-        Board board = game.getBoard();
+        Board board = gameController.getBoard();
         Figure[] figures = board.getFigures();
 
         int horizontalLength = 11;
@@ -70,6 +59,7 @@ public class GameView
         }
         System.out.print(result.append("\n").toString());
     }
+
 }
 
 
