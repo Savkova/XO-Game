@@ -16,7 +16,7 @@ public class InputAgent
 
     public String askPlayerName()
     {
-        System.out.println("Enter your name, please:");
+        System.out.print("Enter your name, please: ");
         String line = scanner.nextLine();
         Main.quit(line);
         return line;
@@ -24,19 +24,17 @@ public class InputAgent
 
     public Figure askFigureType()
     {
-        System.out.println("Сhoose the figure you want to play ('X' or 'O'):");
+        System.out.print("Сhoose the figure you want to play ('X' or 'O'): ");
         String line = "";
         while (scanner.hasNextLine())
         {
             line = scanner.nextLine();
             Main.quit(line);
 
-            if ((line.equalsIgnoreCase(Figure.X.name()))
-                    || (line.equalsIgnoreCase(Figure.O.name()))
-                    || (line.equalsIgnoreCase("0")))
+            if (Figure.isFigure(line))
                 break;
             else
-                System.out.println("Try again, please:");
+                System.out.print("Try again, please: ");
         }
         return (line.equalsIgnoreCase(Figure.X.name())) ? Figure.X : Figure.O;
     }
@@ -45,7 +43,7 @@ public class InputAgent
     {
         String line = "";
         int i = -1;
-        System.out.println("\n\nEnter number from 1 to 9 for move:");
+        System.out.print("\n\nYour move: ");
 
         while (scanner.hasNextLine())
         {
@@ -65,12 +63,12 @@ public class InputAgent
             }
 
         }
-        return (i - 1);
+        return i--;
     }
 
     public boolean askStartNewGame()
     {
-        System.out.println("\n\nEnd game! Try again? (y/n)");
+        System.out.print("\n\nEnd game! Try again? (y/n): ");
         String line = scanner.nextLine();
         if (line.equalsIgnoreCase("y"))
         {
