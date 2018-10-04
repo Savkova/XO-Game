@@ -39,10 +39,7 @@ public class Main
         System.out.println("\n\nLet's start!\n");
         gameView.showPlayers();
 
-        while (gameView.getGameController().move())
-        {
-            //moving
-        }
+        while (gameView.getGameController().move());
 
         continueGame();
     }

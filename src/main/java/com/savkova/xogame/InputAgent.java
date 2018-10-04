@@ -1,6 +1,7 @@
 package com.savkova.xogame;
 
 import com.savkova.xogame.entities.Figure;
+import com.savkova.xogame.exceptions.NoExistPositionException;
 
 import java.util.Scanner;
 
@@ -30,19 +31,17 @@ public class InputAgent
             line = scanner.nextLine();
             Main.quit(line);
 
-
-            if ((line.equalsIgnoreCase(com.savkova.xogame.entities.Figure.X.name()))
-                    || (line.equalsIgnoreCase(com.savkova.xogame.entities.Figure.O.name()))
+            if ((line.equalsIgnoreCase(Figure.X.name()))
+                    || (line.equalsIgnoreCase(Figure.O.name()))
                     || (line.equalsIgnoreCase("0")))
                 break;
             else
                 System.out.println("Try again, please:");
         }
-        return (line.equalsIgnoreCase(com.savkova.xogame.entities.Figure.X.name()))
-                ? com.savkova.xogame.entities.Figure.X : com.savkova.xogame.entities.Figure.O;
+        return (line.equalsIgnoreCase(Figure.X.name())) ? Figure.X : Figure.O;
     }
 
-    public int askMovePosition() throws com.savkova.xogame.exceptions.NoExistPositionException
+    public int askMovePosition() throws NoExistPositionException
     {
         String line = "";
         int i = -1;
@@ -59,7 +58,7 @@ public class InputAgent
                 if ((i > 0) && (i <= 9))
                     break;
                 else
-                    throw new com.savkova.xogame.exceptions.NoExistPositionException();
+                    throw new NoExistPositionException();
             } catch (NumberFormatException e)
             {
                 System.out.print("You did not enter a number. Try again, please: ");
