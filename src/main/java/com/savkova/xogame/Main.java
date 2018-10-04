@@ -39,10 +39,7 @@ public class Main
         System.out.println("\n\nLet's start!\n");
         gameView.showPlayers();
 
-        while (gameView.getGameController().move())
-        {
-            //moving
-        }
+        while (gameView.getGameController().move());
 
         continueGame();
     }
@@ -58,15 +55,15 @@ public class Main
 
     private static Player[] initPlayers()
     {
-        String huPlayerName = inputAgent.askPlayerName();
-        Figure huPlayerFigure = inputAgent.askFigureType();
-        Player huPlayer = new Player(huPlayerName, huPlayerFigure);
+        String humanName = inputAgent.askPlayerName();
+        Figure humanFigure = inputAgent.askFigureType();
+        Player human = new Player(humanName, humanFigure);
 
-        String aiPlayerName = "AI";
-        Figure aiPlayerFigure = huPlayerFigure.equals(Figure.X) ? Figure.O : Figure.X;
-        Player aiPlayer = new Player(aiPlayerName, aiPlayerFigure);
+        String computerName = "Computer";
+        Figure computerFigure = humanFigure.equals(Figure.X) ? Figure.O : Figure.X;
+        Player computer = new Player(computerName, computerFigure);
 
-        return new Player[]{huPlayer, aiPlayer};
+        return new Player[]{human, computer};
     }
 
     private static void continueGame()

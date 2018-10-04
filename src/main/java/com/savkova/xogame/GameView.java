@@ -21,11 +21,11 @@ public class GameView
 
     public void showPlayers()
     {
-        Player player = gameController.getPlayers()[0];
+        Player human = gameController.getPlayers()[0];
         Player computer = gameController.getPlayers()[1];
 
         System.out.printf("%s ('%s') vs. %s ('%s')",
-                player.getName(), player.getFigure(),
+                human.getName(), human.getFigure(),
                 computer.getName(), computer.getFigure());
     }
 
@@ -61,7 +61,6 @@ public class GameView
         }
         System.out.print(result.append("\n").toString());
     }
-
 }
 
 
