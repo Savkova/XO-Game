@@ -6,10 +6,13 @@ public enum Figure
 
     public static boolean isFigure(String s)
     {
-        return (s.equalsIgnoreCase(Figure.X.name()))
+        if ((s.equalsIgnoreCase(Figure.X.name()))
                 || (s.equalsIgnoreCase(Figure.O.name()))
                 || (s.equalsIgnoreCase("0"))
                 || (s.equalsIgnoreCase("Х"))
-                || (s.equalsIgnoreCase("О"));
+                || (s.equalsIgnoreCase("О")))
+            return true;
+        else
+            return false;
     }
 }

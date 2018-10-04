@@ -230,7 +230,7 @@ public class GameController
         {
             GameView.showBoard(board);
             Player winner = players[0].getFigure().equals(figure) ? players[0] : players[1];
-            System.out.println("\n" + winner.getName() + " win!");
+            System.out.println("\n\n" + winner.getName() + " win!");
         } else
         {
             System.out.println("\nNo winner.");
