@@ -152,6 +152,7 @@ public class GameController
         {
             for (int i = 0; i < emptyIndexes.size(); i++)
             {
+                //check rows
                 int row = emptyIndexes.get(i) - emptyIndexes.get(i) % 3;
                 if (((figures[row] == figures[row + 1]) && (figures[row] != null))
                         || ((figures[row] == figures[row + 2]) && (figures[row] != null))
@@ -233,7 +234,7 @@ public class GameController
             System.out.println("\n\n" + winner.getName() + " win!");
         } else
         {
-            System.out.println("\nNo winner.");
+            System.out.println("\n\nNo winner.");
         }
     }
 }
