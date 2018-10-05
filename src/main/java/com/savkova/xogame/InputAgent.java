@@ -63,7 +63,7 @@ public class InputAgent
             }
 
         }
-        return (i - 1);
+        return --i;
     }
 
     public boolean askStartNewGame()
