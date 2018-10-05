@@ -47,54 +47,15 @@ public class GameController
 
         Figure humanFigure = players[0].getFigure();
         Figure computerFigure = players[1].getFigure();
-        Figure currentFigure = getCurrentMoveFigure(board);
+        Figure currentFigure = findCurrentMoveFigure(board);
 
-        InputAgent inputAgent = Main.getInputAgent();
-
-        int position;
-        // human move
         if ((currentFigure != null) && (currentFigure.equals(humanFigure)))
         {
-            System.out.println("\n");
-            GameView.showBoard(board);
-            try
-            {
-                position = inputAgent.askMovePosition();
-                putFigure(board, position, humanFigure);
-
-                if (isWinner(board, position))
-                {
-                    isWin = true;
-                    showWinnerName(true, humanFigure);
-                }
-
-            } catch (NoExistPositionException e)
-            {
-                System.out.print("No such position on this board. Try again: ");
-            } catch (AlreadyOccupiedException e)
-            {
-                System.out.print("This place is already occupied, enter other position: ");
-            }
-            // computer move
+            humanMove(humanFigure);
         } else if ((currentFigure != null) && (currentFigure.equals(computerFigure)))
         {
-            position = 0;
-            try
-            {
-                position = computerMove(board);
-                putFigure(board, position, computerFigure);
-                System.out.println("\n\nComputer move: " + (position + 1));
-            } catch (AlreadyOccupiedException e)
-            {
-            }
-
-            if (isWinner(board, position))
-            {
-                isWin = true;
-                showWinnerName(true, computerFigure);
-            }
-            // board full
-        } else if (currentFigure == null)
+            computerMove(computerFigure);
+        } else if (currentFigure == null)             // if board full
         {
             showWinnerName(false, null);
             return false;
@@ -103,15 +64,52 @@ public class GameController
         return true;
     }
 
-    private void putFigure(final Board board, final int position, final Figure figure) throws AlreadyOccupiedException
+    private void humanMove(Figure humanFigure)
     {
-        if (board.getFigure(position) != null)
-            throw new AlreadyOccupiedException();
+        System.out.println("\n");
+        GameView.showBoard(board);
 
-        board.setFigure(position, figure);
+        InputAgent inputAgent = Main.getInputAgent();
+        try
+        {
+            int position = inputAgent.askMovePosition();
+            putFigure(board, position, humanFigure);
+
+            if (isWinner(board, position))
+            {
+                isWin = true;
+                showWinnerName(true, humanFigure);
+            }
+
+        } catch (NoExistPositionException e)
+        {
+            System.out.print("No such position on this board. Try again: ");
+        } catch (AlreadyOccupiedException e)
+        {
+            System.out.print("This place is already occupied, enter other position: ");
+        }
     }
 
-    private Figure getCurrentMoveFigure(Board board)
+    private void computerMove(Figure computerFigure)
+    {
+        int position = 0;
+        try
+        {
+            position = findBestPosition(board);
+            putFigure(board, position, computerFigure);
+            System.out.println("\n\nComputer move: " + (position + 1));
+        } catch (AlreadyOccupiedException e)
+        {
+        }
+
+        if (isWinner(board, position))
+        {
+            isWin = true;
+            showWinnerName(true, computerFigure);
+        }
+    }
+
+    private Figure findCurrentMoveFigure(Board board)
     {
         int count = 0;
         Figure[] figures = board.getFigures();
@@ -130,7 +128,7 @@ public class GameController
         return Figure.O;
     }
 
-    private int computerMove(final Board board)
+    private int findBestPosition(final Board board)
     {
         Random random = new Random(System.currentTimeMillis());
 
@@ -178,10 +176,10 @@ public class GameController
             }
         }
 
-        return randomMove(emptyIndexes);
+        return findRandomPosition(emptyIndexes);
     }
 
-    private int randomMove(List<Integer> emptyIndexes)
+    private int findRandomPosition(List<Integer> emptyIndexes)
     {
         Random random = new Random(System.currentTimeMillis());
         int i;
@@ -192,6 +190,26 @@ public class GameController
                 break;
         }
         return emptyIndexes.get(i);
+    }
+
+    private List<Integer> findEmptyIndexes(Board board)
+    {
+        Figure[] figures = board.getFigures();
+        ArrayList<Integer> emptyIndexes = new ArrayList<>();
+        for (int i = 0; i < figures.length; i++)
+        {
+            if (figures[i] == null)
+                emptyIndexes.add(i);
+        }
+        return emptyIndexes;
+    }
+
+    private void putFigure(final Board board, final int position, final Figure figure) throws AlreadyOccupiedException
+    {
+        if (board.getFigure(position) != null)
+            throw new AlreadyOccupiedException();
+
+        board.setFigure(position, figure);
     }
 
     private boolean checkRow(Figure[] figures, int row)
@@ -221,18 +239,6 @@ public class GameController
         return (((figures[2] == figures[4]) && (figures[2] != null))
                 || ((figures[2] == figures[6]) && (figures[2] != null))
                 || ((figures[4] == figures[6]) && (figures[4] != null)));
-    }
-
-    private List<Integer> findEmptyIndexes(Board board)
-    {
-        Figure[] figures = board.getFigures();
-        ArrayList<Integer> emptyIndexes = new ArrayList<>();
-        for (int i = 0; i < figures.length; i++)
-        {
-            if (figures[i] == null)
-                emptyIndexes.add(i);
-        }
-        return emptyIndexes;
     }
 
     private boolean isWinner(Board board, int lastMove)
