@@ -81,7 +81,9 @@ public class GameController
                 position = computerMove(board);
                 putFigure(board, position, computerFigure);
                 System.out.println("\n\nComputer move: " + (position + 1));
-            } catch (AlreadyOccupiedException e) {}
+            } catch (AlreadyOccupiedException e)
+            {
+            }
 
             if (isWinner(board, position))
             {
@@ -155,31 +157,20 @@ public class GameController
         {
             for (int i = 0; i < emptyIndexes.size(); i++)
             {
-                //check rows
                 int row = emptyIndexes.get(i) - emptyIndexes.get(i) % 3;
-                if (((figures[row] == figures[row + 1]) && (figures[row] != null))
-                        || ((figures[row] == figures[row + 2]) && (figures[row] != null))
-                        || ((figures[row + 1] == figures[row + 2]) && (figures[row + 1] != null)))
+                if (checkRows(figures, row))
                     return emptyIndexes.get(i);
 
-                //check columns
                 int column = emptyIndexes.get(i) % 3;
-                if (((figures[column] == figures[column + 3]) && (figures[column] != null))
-                        || ((figures[column] == figures[column + 6]) && (figures[column] != null))
-                        || ((figures[column + 3] == figures[column + 6]) && (figures[column + 3] != null)))
+                if (checkColumns(figures, column))
                     return emptyIndexes.get(i);
-                //check left diagonal
+
                 if (emptyIndexes.get(i) % 4 == 0)
                 {
-                    if (((figures[0] == figures[4]) && (figures[0] != null))
-                            || ((figures[0] == figures[8]) && (figures[0] != null))
-                            || ((figures[4] == figures[8]) && (figures[4] != null)))
+                    if (checkLeftDiagonal(figures))
                         return emptyIndexes.get(i);
-                // check right diagonal
-                } else if (((figures[2] == figures[4]) && (figures[2] != null))
-                        || ((figures[2] == figures[6]) && (figures[2] != null))
-                        || ((figures[4] == figures[6]) && (figures[4] != null)))
-                    return emptyIndexes.get(i);
+                } else if(checkRightDiagonal(figures))
+                return emptyIndexes.get(i);
             }
         }
         //random choice
@@ -190,6 +181,35 @@ public class GameController
                 break;
         }
         return emptyIndexes.get(index);
+    }
+
+    private boolean checkRows(Figure[] figures, int row)
+    {
+        return (((figures[row] == figures[row + 1]) && (figures[row] != null))
+                || ((figures[row] == figures[row + 2]) && (figures[row] != null))
+                || ((figures[row + 1] == figures[row + 2]) && (figures[row + 1] != null)));
+    }
+
+    private boolean checkColumns(Figure[] figures, int column)
+    {
+        return (((figures[column] == figures[column + 3]) && (figures[column] != null))
+                || ((figures[column] == figures[column + 6]) && (figures[column] != null))
+                || ((figures[column + 3] == figures[column + 6]) && (figures[column + 3] != null)));
+    }
+
+    private boolean checkLeftDiagonal(Figure[] figures)
+    {
+        return (((figures[0] == figures[4]) && (figures[0] != null))
+                || ((figures[0] == figures[8]) && (figures[0] != null))
+                || ((figures[4] == figures[8]) && (figures[4] != null)));
+    }
+
+    private boolean checkRightDiagonal(Figure[] figures)
+    {
+
+        return (((figures[2] == figures[4]) && (figures[2] != null))
+                || ((figures[2] == figures[6]) && (figures[2] != null))
+                || ((figures[4] == figures[6]) && (figures[4] != null)));
     }
 
     private List<Integer> findEmptyIndexes(Board board)
