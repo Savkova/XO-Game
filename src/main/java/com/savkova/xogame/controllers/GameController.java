@@ -168,10 +168,14 @@ public class GameController
 
                 if (emptyIndex % 4 == 0)
                 {
-                    if (checkLeftDiagonal(figures))
-                        return emptyIndex;
-                    else if (checkRightDiagonal(figures))
-                        return emptyIndex;
+                    int k = checkLeftDiagonal(figures);
+                    if (k != -1)
+                        return k;
+                } else if (emptyIndex % 2 == 0)
+                {
+                    int d = checkRightDiagonal(figures);
+                    if (d != -1)
+                        return d;
                 }
             }
         }
@@ -226,19 +230,32 @@ public class GameController
                 || ((figures[column + 3] == figures[column + 6]) && (figures[column + 3] != null)));
     }
 
-    private boolean checkLeftDiagonal(Figure[] figures)
+    private int checkLeftDiagonal(Figure[] figures)
     {
-        return (((figures[0] == figures[4]) && (figures[0] != null))
-                || ((figures[0] == figures[8]) && (figures[0] != null))
-                || ((figures[4] == figures[8]) && (figures[4] != null)));
+        if ((figures[0] == figures[4]) && (figures[0] != null) && (figures[8] == null))
+            return 8;
+
+        if ((figures[0] == figures[8]) && (figures[0] != null) && (figures[4] == null))
+            return 4;
+
+        if ((figures[4] == figures[8]) && (figures[4] != null) && (figures[0] == null))
+            return 0;
+
+        return -1;
     }
 
-    private boolean checkRightDiagonal(Figure[] figures)
+    private int checkRightDiagonal(Figure[] figures)
     {
+        if ((figures[2] == figures[4]) && (figures[2] != null) && (figures[6] == null))
+            return 6;
 
-        return (((figures[2] == figures[4]) && (figures[2] != null))
-                || ((figures[2] == figures[6]) && (figures[2] != null))
-                || ((figures[4] == figures[6]) && (figures[4] != null)));
+        if ((figures[2] == figures[6]) && (figures[2] != null) && (figures[4] == null))
+            return 4;
+
+        if ((figures[4] == figures[6]) && (figures[4] != null) && (figures[2] == null))
+            return 2;
+
+        return -1;
     }
 
     private boolean isWinner(Board board, int lastMove)
