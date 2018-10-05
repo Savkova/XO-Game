@@ -40,7 +40,10 @@ public class GameController
     public boolean move()
     {
         if (isWin)
+        {
+            GameView.showBoard(board);
             return false;
+        }
 
         Figure humanFigure = players[0].getFigure();
         Figure computerFigure = players[1].getFigure();
@@ -155,42 +158,50 @@ public class GameController
             return sides[index];
         } else
         {
-            for (int i = 0; i < emptyIndexes.size(); i++)
+            for (int emptyIndex : emptyIndexes)
             {
-                int row = emptyIndexes.get(i) - emptyIndexes.get(i) % 3;
-                if (checkRows(figures, row))
-                    return emptyIndexes.get(i);
+                int row = emptyIndex - emptyIndex % 3;
+                if (checkRow(figures, row))
+                    return emptyIndex;
 
-                int column = emptyIndexes.get(i) % 3;
-                if (checkColumns(figures, column))
-                    return emptyIndexes.get(i);
+                int column = emptyIndex % 3;
+                if (checkColumn(figures, column))
+                    return emptyIndex;
 
-                if (emptyIndexes.get(i) % 4 == 0)
+                if (emptyIndex % 4 == 0)
                 {
                     if (checkLeftDiagonal(figures))
-                        return emptyIndexes.get(i);
-                } else if(checkRightDiagonal(figures))
-                return emptyIndexes.get(i);
+                        return emptyIndex;
+                    else if (checkRightDiagonal(figures))
+                        return emptyIndex;
+                }
             }
         }
-        //random choice
-        while (true)
-        {
-            index = random.nextInt(emptyIndexes.size());
-            if (board.getFigure(index) == null)
-                break;
-        }
-        return emptyIndexes.get(index);
+
+        return randomMove(emptyIndexes);
     }
 
-    private boolean checkRows(Figure[] figures, int row)
+    private int randomMove(List<Integer> emptyIndexes)
+    {
+        Random random = new Random(System.currentTimeMillis());
+        int i;
+        while (true)
+        {
+            i = random.nextInt(emptyIndexes.size());
+            if (board.getFigure(emptyIndexes.get(i)) == null)
+                break;
+        }
+        return emptyIndexes.get(i);
+    }
+
+    private boolean checkRow(Figure[] figures, int row)
     {
         return (((figures[row] == figures[row + 1]) && (figures[row] != null))
                 || ((figures[row] == figures[row + 2]) && (figures[row] != null))
                 || ((figures[row + 1] == figures[row + 2]) && (figures[row + 1] != null)));
     }
 
-    private boolean checkColumns(Figure[] figures, int column)
+    private boolean checkColumn(Figure[] figures, int column)
     {
         return (((figures[column] == figures[column + 3]) && (figures[column] != null))
                 || ((figures[column] == figures[column + 6]) && (figures[column] != null))
