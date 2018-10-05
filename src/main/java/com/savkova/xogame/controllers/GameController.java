@@ -138,6 +138,9 @@ public class GameController
 
         int index;
 
+        if (emptyIndexes.size() == 1)
+            return emptyIndexes.get(0);
+
         if (figures[4] == null)
             return center;
         else if (emptyIndexes.size() > 7)
